@@ -14,7 +14,7 @@
 if (!defined('DC_CONTEXT_ADMIN')) {return;}
 
 // dead but useful code, in order to have translations
-__('Last Published Dashboard Module') . __('Display last published posts on dashboard');
+__('Recently Published Posts Dashboard Module') . __('Display recently published posts on dashboard');
 
 // Dashboard behaviours
 $core->addBehavior('adminDashboardContents', ['dmPublishedBehaviors', 'adminDashboardContents']);
