@@ -14,7 +14,7 @@
 if (!defined('DC_RC_PATH')) {return;}
 
 $this->registerModule(
-    "Recently Published Dashboard Module",           // Name
+    "Recently Published Posts Dashboard Module",     // Name
     "Display recently published posts on dashboard", // Description
     "Franck Paul",                                   // Author
     '0.1',                                           // Version

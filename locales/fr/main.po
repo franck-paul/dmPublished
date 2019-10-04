@@ -15,7 +15,7 @@ msgstr ""
 msgid "Display last published posts on dashboard"
 msgstr "Affiche les derniers billets publiés sur le tableau de bord"
 
-msgid "Last Published Dashboard Module"
+msgid "Last Published Posts Dashboard Module"
 msgstr "Module d'affichage des derniers billets publiés"
 
 msgid "See all published posts"
