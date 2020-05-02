@@ -18,7 +18,7 @@ dotclear.dmPublishedPostsCount = function() {
           $('#published-posts'), {
             id: 'dmrp',
             value: nb,
-            remove: (nb == 0),
+            remove: (nb !== undefined && nb === 0),
             type: 'soft',
           }
         );

@@ -13,51 +13,40 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ../git-plugins/dmPublished/_admin.php:17
 msgid "Display recently published posts on dashboard"
 msgstr ""
 
-#: ../git-plugins/dmPublished/_admin.php:17
 msgid "Recently Published Posts Dashboard Module"
 msgstr ""
 
-#: ../git-plugins/dmPublished/_admin.php:52
 msgid "See all published posts"
 msgstr ""
 
-#: ../git-plugins/dmPublished/_admin.php:55
 msgid "No published post"
 msgstr ""
 
-#: ../git-plugins/dmPublished/_admin.php:55
 msgid "No recently published post"
 msgstr ""
 
-#: ../git-plugins/dmPublished/_admin.php:73
 msgid "Recently Published posts"
 msgstr ""
 
-#: ../git-plugins/dmPublished/_admin.php:103
 msgid "Recently published posts on dashboard"
 msgstr ""
 
-#: ../git-plugins/dmPublished/_admin.php:107
 msgid "Display recently published posts"
 msgstr ""
 
-#: ../git-plugins/dmPublished/_admin.php:109
 msgid "Number of published posts to display:"
 msgstr ""
 
-#: ../git-plugins/dmPublished/_admin.php:115
 msgid "Small screen"
 msgstr ""
 
-#: ../git-plugins/dmPublished/_services.php:27
 #, php-format
 msgid "(%d recently published post)"
 msgid_plural "(%d recenlty published posts)"

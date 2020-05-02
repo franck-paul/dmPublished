@@ -17,7 +17,7 @@ $this->registerModule(
     "Recently Published Posts Dashboard Module",     // Name
     "Display recently published posts on dashboard", // Description
     "Franck Paul",                                   // Author
-    '0.1',                                           // Version
+    '0.1.1',                                         // Version
     [
         'requires'    => [['core', '2.15']],
         'permissions' => 'admin',                                   // Permissions
