@@ -10,8 +10,9 @@
  * @copyright Franck Paul carnet.franck.paul@gmail.com
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-
-if (!defined('DC_CONTEXT_ADMIN')) {return;}
+if (!defined('DC_CONTEXT_ADMIN')) {
+    return;
+}
 
 // dead but useful code, in order to have translations
 __('Recently Published Posts Dashboard Module') . __('Display recently published posts on dashboard');
@@ -50,10 +51,11 @@ class dmPublishedBehaviors
             }
             $ret .= '</ul>';
             $ret .= '<p><a href="posts.php?status=1">' . __('See all published posts') . '</a></p>';
+
             return $ret;
-        } else {
-            return '<p>' . ((integer) $nb > 0 ? __('No recently published post') : __('No published post')) . '</p>';
         }
+
+        return '<p>' . ((integer) $nb > 0 ? __('No recently published post') : __('No published post')) . '</p>';
     }
 
     public static function adminDashboardHeaders()
@@ -85,6 +87,7 @@ class dmPublishedBehaviors
 
         // Get and store user's prefs for plugin options
         $core->auth->user_prefs->addWorkspace('dmpublished');
+
         try {
             // Recently published posts
             $core->auth->user_prefs->dmpublished->put('published_posts', !empty($_POST['dmpublished_posts']), 'boolean');
