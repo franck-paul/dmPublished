@@ -23,7 +23,9 @@ $this->registerModule(
         'requires'    => [['core', '2.19']],
         'permissions' => 'admin',                                   // Permissions
         'type'        => 'plugin',                                  // Type
-        'support'     => 'https://open-time.net/?q=dmPublished',    // Support URL
-        'settings'    => ['pref' => '#user-favorites.dmpublished'] // Settings
+
+        'details'    => 'https://open-time.net/?q=dmPublished',       // Details URL
+        'support'    => 'https://github.com/franck-paul/dmPublished', // Support URL
+        'repository' => 'https://raw.githubusercontent.com/franck-paul/dmPublished/main/dcstore.xml'
     ]
 );
