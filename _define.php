@@ -18,14 +18,14 @@ $this->registerModule(
     'Recently Published Posts Dashboard Module',     // Name
     'Display recently published posts on dashboard', // Description
     'Franck Paul',                                   // Author
-    '0.2',                                           // Version
+    '0.3',                                           // Version
     [
-        'requires'    => [['core', '2.19']],
+        'requires'    => [['core', '2.23']],
         'permissions' => 'admin',                                   // Permissions
         'type'        => 'plugin',                                  // Type
 
         'details'    => 'https://open-time.net/?q=dmPublished',       // Details URL
         'support'    => 'https://github.com/franck-paul/dmPublished', // Support URL
-        'repository' => 'https://raw.githubusercontent.com/franck-paul/dmPublished/master/dcstore.xml'
+        'repository' => 'https://raw.githubusercontent.com/franck-paul/dmPublished/master/dcstore.xml',
     ]
 );

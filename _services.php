@@ -17,20 +17,17 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 class dmPublishedRest
 {
     /**
-     * Serve method to get number of recently published posts for current blog.
+     * Gets the published posts count.
      *
-     * @param     core     <b>dcCore</b>     dcCore instance
-     * @param     get     <b>array</b>     cleaned $_GET
+     * @param      array   $get    The get
+     *
+     * @return     xmlTag  The published posts count.
      */
-    public static function getPublishedPostsCount($core, $get)
+    public static function getPublishedPostsCount($get)
     {
-        $count = $core->blog->getPosts(['post_status' => 1], true)->f(0);
-        $str   = ($count ? sprintf(__('(%d recently published post)', '(%d recenlty published posts)', $count), $count) : '');
-
-        $rsp      = new xmlTag('count');
-        $rsp->ret = $str;
-        $rsp->nb  = $count;
-
-        return $rsp;
+        return [
+            'ret' => true,
+            'nb'  => dcCore::app()->blog->getPosts(['post_status' => 1], true)->f(0),
+        ];
     }
 }
