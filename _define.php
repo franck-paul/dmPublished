@@ -15,17 +15,19 @@ if (!defined('DC_RC_PATH')) {
 }
 
 $this->registerModule(
-    'Recently Published Posts Dashboard Module',     // Name
-    'Display recently published posts on dashboard', // Description
-    'Franck Paul',                                   // Author
-    '0.3',                                           // Version
+    'Recently Published Posts Dashboard Module',
+    'Display recently published posts on dashboard',
+    'Franck Paul',
+    '0.4',
     [
-        'requires'    => [['core', '2.23']],
-        'permissions' => 'admin',                                   // Permissions
-        'type'        => 'plugin',                                  // Type
+        'requires'    => [['core', '2.24']],
+        'permissions' => dcCore::app()->auth->makePermissions([
+            dcAuth::PERMISSION_ADMIN,
+        ]),
+        'type' => 'plugin',
 
-        'details'    => 'https://open-time.net/?q=dmPublished',       // Details URL
-        'support'    => 'https://github.com/franck-paul/dmPublished', // Support URL
+        'details'    => 'https://open-time.net/?q=dmPublished',
+        'support'    => 'https://github.com/franck-paul/dmPublished',
         'repository' => 'https://raw.githubusercontent.com/franck-paul/dmPublished/master/dcstore.xml',
     ]
 );

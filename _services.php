@@ -19,15 +19,13 @@ class dmPublishedRest
     /**
      * Gets the published posts count.
      *
-     * @param      array   $get    The get
-     *
-     * @return     xmlTag  The published posts count.
+     * @return     array   The payload.
      */
-    public static function getPublishedPostsCount($get)
+    public static function getPublishedPostsCount(): array
     {
         return [
             'ret' => true,
-            'nb'  => dcCore::app()->blog->getPosts(['post_status' => 1], true)->f(0),
+            'nb'  => dcCore::app()->blog->getPosts(['post_status' => dcBlog::POST_PUBLISHED], true)->f(0),
         ];
     }
 }

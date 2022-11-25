@@ -5,21 +5,25 @@ dotclear.dmPublishedPostsCount = () => {
   dotclear.services(
     'dmPublishedPostsCount',
     (data) => {
-      const response = JSON.parse(data);
-      if (response?.success) {
-        if (response?.payload.ret) {
-          const nb = response.payload.nb;
-          // Badge on module
-          dotclear.badge($('#published-posts'), {
-            id: 'dmrp',
-            value: nb,
-            remove: nb !== undefined && nb === 0,
-            type: 'soft',
-          });
+      try {
+        const response = JSON.parse(data);
+        if (response?.success) {
+          if (response?.payload.ret) {
+            const nb = response.payload.nb;
+            // Badge on module
+            dotclear.badge($('#published-posts'), {
+              id: 'dmrp',
+              value: nb,
+              remove: nb !== undefined && nb === 0,
+              type: 'soft',
+            });
+          }
+        } else {
+          console.log(dotclear.debug && response?.message ? response.message : 'Dotclear REST server error');
+          return;
         }
-      } else {
-        console.log(dotclear.debug && response?.message ? response.message : 'Dotclear REST server error');
-        return;
+      } catch (e) {
+        console.log(e);
       }
     },
     (error) => {

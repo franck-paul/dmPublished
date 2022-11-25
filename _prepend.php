@@ -22,7 +22,7 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 
 // Admin mode
 
-$__autoload['dmPublishedRest'] = __DIR__ . '/_services.php';
+Clearbricks::lib()->autoload(['dmPublishedRest' => __DIR__ . '/_services.php']);
 
 // Register REST methods
-dcCore::app()->rest->addFunction('dmPublishedPostsCount', ['dmPublishedRest', 'getPublishedPostsCount']);
+dcCore::app()->rest->addFunction('dmPublishedPostsCount', [dmPublishedRest::class, 'getPublishedPostsCount']);

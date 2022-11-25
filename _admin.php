@@ -17,21 +17,13 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 // dead but useful code, in order to have translations
 __('Recently Published Posts Dashboard Module') . __('Display recently published posts on dashboard');
 
-// Dashboard behaviours
-dcCore::app()->addBehavior('adminDashboardContents', ['dmPublishedBehaviors', 'adminDashboardContents']);
-dcCore::app()->addBehavior('adminDashboardHeaders', ['dmPublishedBehaviors', 'adminDashboardHeaders']);
-dcCore::app()->addBehavior('adminDashboardFavsIcon', ['dmPublishedBehaviors', 'adminDashboardFavsIcon']);
-
-dcCore::app()->addBehavior('adminAfterDashboardOptionsUpdate', ['dmPublishedBehaviors', 'adminAfterDashboardOptionsUpdate']);
-dcCore::app()->addBehavior('adminDashboardOptionsForm', ['dmPublishedBehaviors', 'adminDashboardOptionsForm']);
-
 # BEHAVIORS
 class dmPublishedBehaviors
 {
     private static function getPublishedPosts($core, $nb, $large)
     {
         // Get last $nb recently published posts
-        $params = ['post_status' => 1];
+        $params = ['post_status' => dcBlog::POST_PUBLISHED];
         if ((int) $nb > 0) {
             $params['limit'] = (int) $nb;
         }
@@ -50,7 +42,7 @@ class dmPublishedBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="posts.php?status=1">' . __('See all published posts') . '</a></p>';
+            $ret .= '<p><a href="posts.php?status=' . dcBlog::POST_PUBLISHED . '">' . __('See all published posts') . '</a></p>';
 
             return $ret;
         }
@@ -63,7 +55,7 @@ class dmPublishedBehaviors
         return dcPage::jsModuleLoad('dmPublished/js/service.js', dcCore::app()->getVersion('dmPublished'));
     }
 
-    public static function adminDashboardContents($core, $contents)
+    public static function adminDashboardContents($contents)
     {
         // Add large modules to the contents stack
         dcCore::app()->auth->user_prefs->addWorkspace('dmpublished');
@@ -81,7 +73,7 @@ class dmPublishedBehaviors
         }
     }
 
-    public static function adminAfterDashboardOptionsUpdate($userID)
+    public static function adminAfterDashboardOptionsUpdate()
     {
         // Get and store user's prefs for plugin options
         dcCore::app()->auth->user_prefs->addWorkspace('dmpublished');
@@ -96,7 +88,7 @@ class dmPublishedBehaviors
         }
     }
 
-    public static function adminDashboardOptionsForm($core)
+    public static function adminDashboardOptionsForm()
     {
         // Add fieldset for plugin options
         dcCore::app()->auth->user_prefs->addWorkspace('dmpublished');
@@ -118,3 +110,10 @@ class dmPublishedBehaviors
             '</div>';
     }
 }
+
+// Dashboard behaviours
+dcCore::app()->addBehavior('adminDashboardContentsV2', [dmPublishedBehaviors::class, 'adminDashboardContents']);
+dcCore::app()->addBehavior('adminDashboardHeaders', [dmPublishedBehaviors::class, 'adminDashboardHeaders']);
+
+dcCore::app()->addBehavior('adminAfterDashboardOptionsUpdate', [dmPublishedBehaviors::class, 'adminAfterDashboardOptionsUpdate']);
+dcCore::app()->addBehavior('adminDashboardOptionsFormV2', [dmPublishedBehaviors::class, 'adminDashboardOptionsForm']);
