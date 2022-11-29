@@ -18,7 +18,7 @@ $this->registerModule(
     'Recently Published Posts Dashboard Module',
     'Display recently published posts on dashboard',
     'Franck Paul',
-    '0.4',
+    '1.0',
     [
         'requires'    => [['core', '2.24']],
         'permissions' => dcCore::app()->auth->makePermissions([
