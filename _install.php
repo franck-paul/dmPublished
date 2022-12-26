@@ -14,21 +14,15 @@ if (!defined('DC_CONTEXT_ADMIN')) {
     return;
 }
 
-$new_version = dcCore::app()->plugins->moduleInfo('dmPublished', 'version');
-$old_version = dcCore::app()->getVersion('dmPublished');
-
-if (version_compare((string) $old_version, $new_version, '>=')) {
+if (!dcCore::app()->newVersion(basename(__DIR__), dcCore::app()->plugins->moduleInfo(basename(__DIR__), 'version'))) {
     return;
 }
 
 try {
-    dcCore::app()->auth->user_prefs->addWorkspace('dmpublished');
-
     // Default prefs for recently published posts and comments
     dcCore::app()->auth->user_prefs->dmpublished->put('published_posts', false, 'boolean', 'Display recently published posts', false, true);
     dcCore::app()->auth->user_prefs->dmpublished->put('published_posts_nb', 5, 'integer', 'Number of recently published posts displayed', false, true);
     dcCore::app()->auth->user_prefs->dmpublished->put('published_posts_large', true, 'boolean', 'Large display', false, true);
-    dcCore::app()->setVersion('dmPublished', $new_version);
 
     return true;
 } catch (Exception $e) {
