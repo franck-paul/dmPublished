@@ -19,5 +19,7 @@ l10n::$locales['Recently published posts on dashboard'] = '';
 l10n::$locales['Display recently published posts'] = '';
 l10n::$locales['Number of published posts to display:'] = '';
 l10n::$locales['Small screen'] = '';
-l10n::$locales['(%d recently published post)'][0] = '';
-l10n::$locales['(%d recently published post)'][1] = '';
+l10n::$locales['(%d recently published post)'] = [
+	'',
+	'',
+];

@@ -19,5 +19,7 @@ l10n::$locales['Recently published posts on dashboard'] = 'Billets récemment pu
 l10n::$locales['Display recently published posts'] = 'Afficher les billets récemment publiés';
 l10n::$locales['Number of published posts to display:'] = 'Nombre de billets récemment publiés à afficher :';
 l10n::$locales['Small screen'] = 'Affichage abrégé';
-l10n::$locales['(%d recently published post)'][0] = '(dont %d publié récemment)';
-l10n::$locales['(%d recently published post)'][1] = '(dont %d publiés récemment)';
+l10n::$locales['(%d recently published post)'] = [
+	'(dont %d publié récemment)',
+	'(dont %d publiés récemment)',
+];

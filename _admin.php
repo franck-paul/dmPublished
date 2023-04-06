@@ -34,10 +34,12 @@ class dmPublishedBehaviors
                 $ret .= '<li class="line" id="dmrp' . $rs->post_id . '">';
                 $ret .= '<a href="post.php?id=' . $rs->post_id . '">' . $rs->post_title . '</a>';
                 if ($large) {
+                    $dt = '<time datetime="' . dt::iso8601(strtotime($rs->post_dt), dcCore::app()->auth->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
-                    __('by') . ' ' . $rs->user_id . ' ' . __('on') . ' ' .
-                    dt::dt2str(dcCore::app()->blog->settings->system->date_format, $rs->post_dt) . ' ' .
-                    dt::dt2str(dcCore::app()->blog->settings->system->time_format, $rs->post_dt) . ')';
+                    __('by') . ' ' . $rs->user_id . ' ' . sprintf($dt, __('on') . ' ' .
+                        dt::dt2str(dcCore::app()->blog->settings->system->date_format, $rs->post_dt) . ' ' .
+                        dt::dt2str(dcCore::app()->blog->settings->system->time_format, $rs->post_dt)) .
+                    ')';
                 }
                 $ret .= '</li>';
             }
@@ -58,7 +60,6 @@ class dmPublishedBehaviors
     public static function adminDashboardContents($contents)
     {
         // Add large modules to the contents stack
-        dcCore::app()->auth->user_prefs->addWorkspace('dmpublished');
         if (dcCore::app()->auth->user_prefs->dmpublished->published_posts) {
             $class = (dcCore::app()->auth->user_prefs->dmpublished->published_posts_large ? 'medium' : 'small');
             $ret   = '<div id="published-posts" class="box ' . $class . '">' .
@@ -76,8 +77,6 @@ class dmPublishedBehaviors
     public static function adminAfterDashboardOptionsUpdate()
     {
         // Get and store user's prefs for plugin options
-        dcCore::app()->auth->user_prefs->addWorkspace('dmpublished');
-
         try {
             // Recently published posts
             dcCore::app()->auth->user_prefs->dmpublished->put('published_posts', !empty($_POST['dmpublished_posts']), 'boolean');
@@ -91,7 +90,6 @@ class dmPublishedBehaviors
     public static function adminDashboardOptionsForm()
     {
         // Add fieldset for plugin options
-        dcCore::app()->auth->user_prefs->addWorkspace('dmpublished');
 
         echo '<div class="fieldset" id="dmpublished"><h4>' . __('Recently published posts on dashboard') . '</h4>' .
 
@@ -112,8 +110,10 @@ class dmPublishedBehaviors
 }
 
 // Dashboard behaviours
-dcCore::app()->addBehavior('adminDashboardContentsV2', [dmPublishedBehaviors::class, 'adminDashboardContents']);
-dcCore::app()->addBehavior('adminDashboardHeaders', [dmPublishedBehaviors::class, 'adminDashboardHeaders']);
+dcCore::app()->addBehaviors([
+    'adminDashboardContentsV2'         => [dmPublishedBehaviors::class, 'adminDashboardContents'],
+    'adminDashboardHeaders'            => [dmPublishedBehaviors::class, 'adminDashboardHeaders'],
 
-dcCore::app()->addBehavior('adminAfterDashboardOptionsUpdate', [dmPublishedBehaviors::class, 'adminAfterDashboardOptionsUpdate']);
-dcCore::app()->addBehavior('adminDashboardOptionsFormV2', [dmPublishedBehaviors::class, 'adminDashboardOptionsForm']);
+    'adminAfterDashboardOptionsUpdate' => [dmPublishedBehaviors::class, 'adminAfterDashboardOptionsUpdate'],
+    'adminDashboardOptionsFormV2'      => [dmPublishedBehaviors::class, 'adminDashboardOptionsForm'],
+]);
