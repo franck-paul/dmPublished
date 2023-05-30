@@ -34,6 +34,72 @@ dotclear.dmPublishedPostsCount = () => {
   );
 };
 
+dotclear.dmLastPublishedRows = () => {
+  dotclear.services(
+    'dmPublisheduledRows',
+    (data) => {
+      try {
+        const response = JSON.parse(data);
+        if (response?.success) {
+          if (response?.payload.ret) {
+            // Replace current list with the new one
+            if ($('#published-posts ul').length) {
+              $('#published-posts ul').remove();
+            }
+            if ($('#published-posts p').length) {
+              $('#published-posts p').remove();
+            }
+            // Display module content
+            $('#published-posts h3').after(response.payload.list);
+            // Bind every new lines for viewing published post content
+            $.expandContent({
+              lines: $('#published-posts li.line'),
+              callback: dotclear.dmPublishedPostsView,
+            });
+            $('#published-posts ul').addClass('expandable');
+          }
+        } else {
+          console.log(dotclear.debug && response?.message ? response.message : 'Dotclear REST server error');
+          return;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    (error) => {
+      console.log(error);
+    },
+    true, // Use GET method
+    { json: 1 },
+  );
+};
+
+dotclear.dmPublishedCheck = () => {
+  dotclear.services(
+    'dmPublishedCheck',
+    (data) => {
+      try {
+        const response = JSON.parse(data);
+        if (response?.success) {
+          if (response?.payload.ret) {
+            dotclear.dmLastPublishedRows();
+          }
+        } else {
+          console.log(dotclear.debug && response?.message ? response.message : 'Dotclear REST server error');
+          return;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    (error) => {
+      console.log(error);
+    },
+    true, // Use GET method
+    { json: 1 },
+  );
+};
+
 dotclear.dmPublishedPostsView = (line, action = 'toggle', e = null) => {
   if ($(line).attr('id') == undefined) {
     return;
@@ -71,11 +137,16 @@ dotclear.dmPublishedPostsView = (line, action = 'toggle', e = null) => {
 };
 
 $(() => {
+  Object.assign(dotclear, dotclear.getData('dm_published'));
   $.expandContent({
     lines: $('#published-posts li.line'),
     callback: dotclear.dmPublishedPostsView,
   });
   $('#published-posts ul').addClass('expandable');
+  if (dotclear.dmPublished_Monitor) {
+    // Auto refresh requested : Set 5 minutes interval between two checks for publishing published entries
+    dotclear.dmPublished_Timer = setInterval(dotclear.dmPublishedCheck, 60 * 5 * 1000);
+  }
   // First pass
   dotclear.dmPublishedPostsCount();
   // Then fired every 300 seconds - 5 minutes

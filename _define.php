@@ -14,13 +14,16 @@ $this->registerModule(
     'Recently Published Posts Dashboard Module',
     'Display recently published posts on dashboard',
     'Franck Paul',
-    '1.0',
+    '2.0',
     [
         'requires'    => [['core', '2.26']],
         'permissions' => dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_ADMIN,
         ]),
-        'type' => 'plugin',
+        'type'     => 'plugin',
+        'settings' => [
+            'pref' => '#user-favorites.dmpublished',
+        ],
 
         'details'    => 'https://open-time.net/?q=dmPublished',
         'support'    => 'https://github.com/franck-paul/dmPublished',
