@@ -130,7 +130,7 @@ class BackendBehaviors
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpublished_monitor', !$preferences->monitor))
+                (new Checkbox('dmpublished_monitor', $preferences->monitor))
                     ->value(1)
                     ->label((new Label(__('Monitor published'), Label::INSIDE_TEXT_AFTER))),
             ]),
