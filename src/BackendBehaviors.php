@@ -80,7 +80,7 @@ class BackendBehaviors
         if ($preferences->active) {
             $class = ($preferences->posts_large ? 'medium' : 'small');
             $ret   = '<div id="published-posts" class="box ' . $class . '">' .
-            '<h3>' . '<img src="' . urldecode(dcPage::getPF(My::id() . '/icon.png')) . '" alt="" />' . ' ' . __('Recently Published posts') . '</h3>';
+            '<h3>' . '<img src="' . urldecode(dcPage::getPF(My::id() . '/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Recently Published posts') . '</h3>';
             $ret .= self::getPublishedPosts(
                 dcCore::app(),
                 $preferences->posts_nb,
