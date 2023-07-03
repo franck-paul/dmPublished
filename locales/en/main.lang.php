@@ -22,3 +22,4 @@ L10n::$locales['Display recently published posts'] = '';
 L10n::$locales['Number of published posts to display:'] = '';
 L10n::$locales['Small screen'] = '';
 L10n::$locales['Monitor published'] = '';
+L10n::$locales['Interval in seconds between two refreshes:'] = '';
