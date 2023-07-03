@@ -9,7 +9,7 @@ dotclear.dmPublishedPostsCount = () => {
         const response = JSON.parse(data);
         if (response?.success) {
           if (response?.payload.ret) {
-            const nb = response.payload.nb;
+            const { nb } = response.payload;
             // Badge on module
             dotclear.badge($('#published-posts'), {
               id: 'dmrp',
@@ -124,9 +124,9 @@ dotclear.dmPublishedPostsView = (line, action = 'toggle', e = null) => {
           $(li).append(content);
           $(line).addClass('expand');
           line.parentNode.insertBefore(li, line.nextSibling);
-        } else {
-          $(line).toggleClass('expand');
+          return;
         }
+        $(line).toggleClass('expand');
       },
       {
         clean: e.metaKey,
