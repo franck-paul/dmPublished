@@ -68,7 +68,8 @@ class BackendBehaviors
 
         return
         dcPage::jsJson('dm_published', [
-            'dmPublished_Monitor' => $preferences->monitor,
+            'dmPublished_Monitor'  => $preferences->monitor,
+            'dmPublished_Interval' => ($preferences->interval ?? 300),
         ]) .
         dcPage::jsModuleLoad(My::id() . '/js/service.js', dcCore::app()->getVersion(My::id()));
     }
@@ -101,6 +102,7 @@ class BackendBehaviors
             $preferences->put('posts_nb', (int) $_POST['dmpublished_posts_nb'], dcWorkspace::WS_INT);
             $preferences->put('posts_large', empty($_POST['dmpublished_posts_small']), dcWorkspace::WS_BOOL);
             $preferences->put('monitor', !empty($_POST['dmpublished_monitor']), dcWorkspace::WS_BOOL);
+            $preferences->put('interval', (int) $_POST['dmpublished_interval'], dcWorkspace::WS_INT);
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
         }
@@ -133,6 +135,10 @@ class BackendBehaviors
                 (new Checkbox('dmpublished_monitor', $preferences->monitor))
                     ->value(1)
                     ->label((new Label(__('Monitor published'), Label::INSIDE_TEXT_AFTER))),
+            ]),
+            (new Para())->items([
+                (new Number('dmpublished_interval', 0, 9_999_999, $preferences->interval))
+                    ->label((new Label(__('Interval in seconds between two refreshes:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
         ])
         ->render();

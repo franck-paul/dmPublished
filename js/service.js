@@ -144,11 +144,14 @@ $(() => {
   });
   $('#published-posts ul').addClass('expandable');
   if (dotclear.dmPublished_Monitor) {
-    // Auto refresh requested : Set 5 minutes interval between two checks for publishing published entries
-    dotclear.dmPublished_Timer = setInterval(dotclear.dmPublishedCheck, 60 * 5 * 1000);
+    // Auto refresh requested : Set interval between two checks for publishing published entries
+    dotclear.dmPublished_Timer = setInterval(dotclear.dmPublishedCheck, (dotclear.dmPublished_Interval || 300) * 1000);
   }
   // First pass
   dotclear.dmPublishedPostsCount();
-  // Then fired every 300 seconds - 5 minutes
-  dotclear.dbPublishedPostsCount_Timer = setInterval(dotclear.dmPublishedPostsCount, 300 * 1000);
+  // Then fired every x seconds
+  dotclear.dbPublishedPostsCount_Timer = setInterval(
+    dotclear.dmPublishedPostsCount,
+    (dotclear.dmPublished_Interval || 300) * 1000,
+  );
 });
