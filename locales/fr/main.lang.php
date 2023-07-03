@@ -22,3 +22,4 @@ L10n::$locales['Display recently published posts'] = 'Afficher les billets réce
 L10n::$locales['Number of published posts to display:'] = 'Nombre de billets récemment publiés à afficher :';
 L10n::$locales['Small screen'] = 'Affichage abrégé';
 L10n::$locales['Monitor published'] = 'Mettre à jour la liste régulièrement';
+L10n::$locales['Interval in seconds between two refreshes:'] = 'Intervalle en secondes entre deux rafraichissements :';
