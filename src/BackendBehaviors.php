@@ -17,8 +17,8 @@ namespace Dotclear\Plugin\dmPublished;
 use ArrayObject;
 use dcBlog;
 use dcCore;
-use dcPage;
 use dcWorkspace;
+use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Fieldset;
@@ -42,7 +42,7 @@ class BackendBehaviors
             $ret = '<ul>';
             while ($rs->fetch()) {
                 $ret .= '<li class="line" id="dmrp' . $rs->post_id . '">';
-                $ret .= '<a href="' . dcCore::app()->adminurl->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
+                $ret .= '<a href="' . dcCore::app()->admin->url->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
                 if ($large) {
                     $dt = '<time datetime="' . Date::iso8601(strtotime($rs->post_dt), dcCore::app()->auth->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
@@ -54,7 +54,7 @@ class BackendBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="' . dcCore::app()->adminurl->get('admin.posts', ['status' => dcBlog::POST_PUBLISHED]) . '">' . __('See all published posts') . '</a></p>';
+            $ret .= '<p><a href="' . dcCore::app()->admin->url->get('admin.posts', ['status' => dcBlog::POST_PUBLISHED]) . '">' . __('See all published posts') . '</a></p>';
 
             return $ret;
         }
@@ -67,11 +67,11 @@ class BackendBehaviors
         $preferences = dcCore::app()->auth->user_prefs->get(My::id());
 
         return
-        dcPage::jsJson('dm_published', [
+        Page::jsJson('dm_published', [
             'dmPublished_Monitor'  => $preferences->monitor,
             'dmPublished_Interval' => ($preferences->interval ?? 300),
         ]) .
-        dcPage::jsModuleLoad(My::id() . '/js/service.js', dcCore::app()->getVersion(My::id()));
+        My::jsLoad('service.js');
     }
 
     public static function adminDashboardContents($contents)
@@ -81,7 +81,7 @@ class BackendBehaviors
         if ($preferences->active) {
             $class = ($preferences->posts_large ? 'medium' : 'small');
             $ret   = '<div id="published-posts" class="box ' . $class . '">' .
-            '<h3>' . '<img src="' . urldecode(dcPage::getPF(My::id() . '/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Recently Published posts') . '</h3>';
+            '<h3>' . '<img src="' . urldecode(Page::getPF(My::id() . '/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Recently Published posts') . '</h3>';
             $ret .= self::getPublishedPosts(
                 dcCore::app(),
                 $preferences->posts_nb,
@@ -95,6 +95,7 @@ class BackendBehaviors
     public static function adminAfterDashboardOptionsUpdate()
     {
         $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+
         // Get and store user's prefs for plugin options
         try {
             // Recently published posts

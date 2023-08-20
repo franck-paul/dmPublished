@@ -15,40 +15,37 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\dmPublished;
 
 use dcCore;
-use dcNsProcess;
+use Dotclear\Core\Process;
 
-class Backend extends dcNsProcess
+class Backend extends Process
 {
-    protected static $init = false; /** @deprecated since 2.27 */
     public static function init(): bool
     {
-        static::$init = My::checkContext(My::BACKEND);
-
         // dead but useful code, in order to have translations
         __('Recently Published Posts Dashboard Module') . __('Display recently published posts on dashboard');
 
-        return static::$init;
+        return self::status(My::checkContext(My::BACKEND));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
         // Dashboard behaviours
         dcCore::app()->addBehaviors([
-            'adminDashboardContentsV2' => [BackendBehaviors::class, 'adminDashboardContents'],
-            'adminDashboardHeaders'    => [BackendBehaviors::class, 'adminDashboardHeaders'],
+            'adminDashboardContentsV2' => BackendBehaviors::adminDashboardContents(...),
+            'adminDashboardHeaders'    => BackendBehaviors::adminDashboardHeaders(...),
 
-            'adminAfterDashboardOptionsUpdate' => [BackendBehaviors::class, 'adminAfterDashboardOptionsUpdate'],
-            'adminDashboardOptionsFormV2'      => [BackendBehaviors::class, 'adminDashboardOptionsForm'],
+            'adminAfterDashboardOptionsUpdate' => BackendBehaviors::adminAfterDashboardOptionsUpdate(...),
+            'adminDashboardOptionsFormV2'      => BackendBehaviors::adminDashboardOptionsForm(...),
         ]);
 
         // Register REST methods
-        dcCore::app()->rest->addFunction('dmPublishedPostsCount', [BackendRest::class, 'getPublishedPostsCount']);
-        dcCore::app()->rest->addFunction('dmPublishedCheck', [BackendRest::class, 'checkPublished']);
-        dcCore::app()->rest->addFunction('dmPublisheduledRows', [BackendRest::class, 'getLastPublishedRows']);
+        dcCore::app()->rest->addFunction('dmPublishedPostsCount', BackendRest::getPublishedPostsCount(...));
+        dcCore::app()->rest->addFunction('dmPublishedCheck', BackendRest::checkPublished(...));
+        dcCore::app()->rest->addFunction('dmPublisheduledRows', BackendRest::getLastPublishedRows(...));
 
         return true;
     }
