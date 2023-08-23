@@ -51,7 +51,7 @@ class BackendRest
      */
     public static function getLastPublishedRows(): array
     {
-        $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+        $preferences = My::prefs();
         $list        = BackendBehaviors::getPublishedPosts(
             dcCore::app(),
             $preferences->posts_nb,

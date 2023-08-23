@@ -64,7 +64,7 @@ class BackendBehaviors
 
     public static function adminDashboardHeaders()
     {
-        $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+        $preferences = My::prefs();
 
         return
         Page::jsJson('dm_published', [
@@ -76,7 +76,7 @@ class BackendBehaviors
 
     public static function adminDashboardContents($contents)
     {
-        $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+        $preferences = My::prefs();
         // Add large modules to the contents stack
         if ($preferences->active) {
             $class = ($preferences->posts_large ? 'medium' : 'small');
@@ -94,7 +94,7 @@ class BackendBehaviors
 
     public static function adminAfterDashboardOptionsUpdate()
     {
-        $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+        $preferences = My::prefs();
 
         // Get and store user's prefs for plugin options
         try {
@@ -111,7 +111,7 @@ class BackendBehaviors
 
     public static function adminDashboardOptionsForm()
     {
-        $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+        $preferences = My::prefs();
 
         // Add fieldset for plugin options
         echo
