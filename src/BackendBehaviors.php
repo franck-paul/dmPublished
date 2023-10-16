@@ -30,7 +30,7 @@ use Exception;
 
 class BackendBehaviors
 {
-    public static function getPublishedPosts($core, $nb, $large)
+    public static function getPublishedPosts(int $nb, bool $large): string
     {
         // Get last $nb recently published posts
         $params = ['post_status' => dcBlog::POST_PUBLISHED];
@@ -42,7 +42,7 @@ class BackendBehaviors
             $ret = '<ul>';
             while ($rs->fetch()) {
                 $ret .= '<li class="line" id="dmrp' . $rs->post_id . '">';
-                $ret .= '<a href="' . dcCore::app()->admin->url->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
+                $ret .= '<a href="' . dcCore::app()->adminurl->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
                 if ($large) {
                     $dt = '<time datetime="' . Date::iso8601(strtotime($rs->post_dt), dcCore::app()->auth->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
@@ -54,7 +54,7 @@ class BackendBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="' . dcCore::app()->admin->url->get('admin.posts', ['status' => dcBlog::POST_PUBLISHED]) . '">' . __('See all published posts') . '</a></p>';
+            $ret .= '<p><a href="' . dcCore::app()->adminurl->get('admin.posts', ['status' => dcBlog::POST_PUBLISHED]) . '">' . __('See all published posts') . '</a></p>';
 
             return $ret;
         }
@@ -62,7 +62,7 @@ class BackendBehaviors
         return '<p>' . ((int) $nb > 0 ? __('No recently published post') : __('No published post')) . '</p>';
     }
 
-    public static function adminDashboardHeaders()
+    public static function adminDashboardHeaders(): string
     {
         $preferences = My::prefs();
 
@@ -74,7 +74,12 @@ class BackendBehaviors
         My::jsLoad('service.js');
     }
 
-    public static function adminDashboardContents($contents)
+    /**
+     * @param      ArrayObject<int, ArrayObject<int, string>>  $contents  The contents
+     *
+     * @return     string
+     */
+    public static function adminDashboardContents(ArrayObject $contents): string
     {
         $preferences = My::prefs();
         // Add large modules to the contents stack
@@ -83,16 +88,17 @@ class BackendBehaviors
             $ret   = '<div id="published-posts" class="box ' . $class . '">' .
             '<h3>' . '<img src="' . urldecode(Page::getPF(My::id() . '/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Recently Published posts') . '</h3>';
             $ret .= self::getPublishedPosts(
-                dcCore::app(),
                 $preferences->posts_nb,
                 $preferences->posts_large
             );
             $ret .= '</div>';
             $contents[] = new ArrayObject([$ret]);
         }
+
+        return '';
     }
 
-    public static function adminAfterDashboardOptionsUpdate()
+    public static function adminAfterDashboardOptionsUpdate(): string
     {
         $preferences = My::prefs();
 
@@ -107,9 +113,11 @@ class BackendBehaviors
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
         }
+
+        return '';
     }
 
-    public static function adminDashboardOptionsForm()
+    public static function adminDashboardOptionsForm(): string
     {
         $preferences = My::prefs();
 
@@ -143,5 +151,7 @@ class BackendBehaviors
             ]),
         ])
         ->render();
+
+        return '';
     }
 }
