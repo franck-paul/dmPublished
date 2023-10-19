@@ -49,19 +49,23 @@ class Install extends Process
                 };
 
                 $preferences = My::prefs();
-                foreach (['posts_nb', 'posts_large', 'monitor'] as $pref) {
-                    $rename($pref, $preferences);
+                if ($preferences) {
+                    foreach (['posts_nb', 'posts_large', 'monitor'] as $pref) {
+                        $rename($pref, $preferences);
+                    }
+                    $preferences->rename('published_posts', 'active');
                 }
-                $preferences->rename('published_posts', 'active');
             }
 
             // Default prefs for recently published posts and comments
             $preferences = My::prefs();
-            $preferences->put('active', false, dcWorkspace::WS_BOOL, 'Display recently published posts', false, true);
-            $preferences->put('posts_nb', 5, dcWorkspace::WS_INT, 'Number of recently published posts displayed', false, true);
-            $preferences->put('posts_large', true, dcWorkspace::WS_BOOL, 'Large display', false, true);
-            $preferences->put('monitor', false, dcWorkspace::WS_BOOL, 'Monitor', false, true);
-            $preferences->put('interval', 300, dcWorkspace::WS_INT, 'Interval between two refreshes', false, true);
+            if ($preferences) {
+                $preferences->put('active', false, dcWorkspace::WS_BOOL, 'Display recently published posts', false, true);
+                $preferences->put('posts_nb', 5, dcWorkspace::WS_INT, 'Number of recently published posts displayed', false, true);
+                $preferences->put('posts_large', true, dcWorkspace::WS_BOOL, 'Large display', false, true);
+                $preferences->put('monitor', false, dcWorkspace::WS_BOOL, 'Monitor', false, true);
+                $preferences->put('interval', 300, dcWorkspace::WS_INT, 'Interval between two refreshes', false, true);
+            }
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
         }

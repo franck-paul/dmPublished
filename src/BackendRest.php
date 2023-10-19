@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\dmPublished;
 
 use dcBlog;
-use dcCore;
+use Dotclear\App;
 
 class BackendRest
 {
@@ -28,7 +28,7 @@ class BackendRest
     {
         return [
             'ret' => true,
-            'nb'  => dcCore::app()->blog->getPosts(['post_status' => dcBlog::POST_PUBLISHED], true)->f(0),
+            'nb'  => App::blog()->getPosts(['post_status' => dcBlog::POST_PUBLISHED], true)->f(0),
         ];
     }
 
@@ -52,7 +52,13 @@ class BackendRest
     public static function getLastPublishedRows(): array
     {
         $preferences = My::prefs();
-        $list        = BackendBehaviors::getPublishedPosts(
+        if (!$preferences) {
+            return [
+                'ret' => false,
+            ];
+        }
+
+        $list = BackendBehaviors::getPublishedPosts(
             $preferences->posts_nb,
             $preferences->posts_large
         );
