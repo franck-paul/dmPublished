@@ -14,8 +14,8 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\dmPublished;
 
-use dcBlog;
 use Dotclear\App;
+use Dotclear\Interface\Core\BlogInterface;
 
 class BackendRest
 {
@@ -28,7 +28,7 @@ class BackendRest
     {
         return [
             'ret' => true,
-            'nb'  => App::blog()->getPosts(['post_status' => dcBlog::POST_PUBLISHED], true)->f(0),
+            'nb'  => App::blog()->getPosts(['post_status' => BlogInterface::POST_PUBLISHED], true)->f(0),
         ];
     }
 

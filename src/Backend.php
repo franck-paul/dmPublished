@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\dmPublished;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Process;
 
 class Backend extends Process
@@ -34,7 +34,7 @@ class Backend extends Process
         }
 
         // Dashboard behaviours
-        dcCore::app()->addBehaviors([
+        App::behavior()->addBehaviors([
             'adminDashboardContentsV2' => BackendBehaviors::adminDashboardContents(...),
             'adminDashboardHeaders'    => BackendBehaviors::adminDashboardHeaders(...),
 
@@ -43,9 +43,9 @@ class Backend extends Process
         ]);
 
         // Register REST methods
-        dcCore::app()->rest->addFunction('dmPublishedPostsCount', BackendRest::getPublishedPostsCount(...));
-        dcCore::app()->rest->addFunction('dmPublishedCheck', BackendRest::checkPublished(...));
-        dcCore::app()->rest->addFunction('dmPublisheduledRows', BackendRest::getLastPublishedRows(...));
+        App::rest()->addFunction('dmPublishedPostsCount', BackendRest::getPublishedPostsCount(...));
+        App::rest()->addFunction('dmPublishedCheck', BackendRest::checkPublished(...));
+        App::rest()->addFunction('dmPublisheduledRows', BackendRest::getLastPublishedRows(...));
 
         return true;
     }

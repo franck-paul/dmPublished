@@ -15,9 +15,6 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\dmPublished;
 
 use ArrayObject;
-use dcBlog;
-use dcCore;
-use dcWorkspace;
 use Dotclear\App;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Date;
@@ -27,6 +24,7 @@ use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Legend;
 use Dotclear\Helper\Html\Form\Number;
 use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Interface\Core\BlogInterface;
 use Exception;
 
 class BackendBehaviors
@@ -34,7 +32,7 @@ class BackendBehaviors
     public static function getPublishedPosts(int $nb, bool $large): string
     {
         // Get last $nb recently published posts
-        $params = ['post_status' => dcBlog::POST_PUBLISHED];
+        $params = ['post_status' => BlogInterface::POST_PUBLISHED];
         if ((int) $nb > 0) {
             $params['limit'] = (int) $nb;
         }
@@ -43,9 +41,9 @@ class BackendBehaviors
             $ret = '<ul>';
             while ($rs->fetch()) {
                 $ret .= '<li class="line" id="dmrp' . $rs->post_id . '">';
-                $ret .= '<a href="' . dcCore::app()->adminurl->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
+                $ret .= '<a href="' . App::backend()->url()->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
                 if ($large) {
-                    $dt = '<time datetime="' . Date::iso8601(strtotime($rs->post_dt), dcCore::app()->auth->getInfo('user_tz')) . '">%s</time>';
+                    $dt = '<time datetime="' . Date::iso8601(strtotime($rs->post_dt), App::auth()->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
                     __('by') . ' ' . $rs->user_id . ' ' . sprintf($dt, __('on') . ' ' .
                         Date::dt2str(App::blog()->settings()->system->date_format, $rs->post_dt) . ' ' .
@@ -55,7 +53,7 @@ class BackendBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="' . dcCore::app()->adminurl->get('admin.posts', ['status' => dcBlog::POST_PUBLISHED]) . '">' . __('See all published posts') . '</a></p>';
+            $ret .= '<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => BlogInterface::POST_PUBLISHED]) . '">' . __('See all published posts') . '</a></p>';
 
             return $ret;
         }
@@ -107,13 +105,13 @@ class BackendBehaviors
         if ($preferences) {
             try {
                 // Recently published posts
-                $preferences->put('active', !empty($_POST['dmpublished_active']), dcWorkspace::WS_BOOL);
-                $preferences->put('posts_nb', (int) $_POST['dmpublished_posts_nb'], dcWorkspace::WS_INT);
-                $preferences->put('posts_large', empty($_POST['dmpublished_posts_small']), dcWorkspace::WS_BOOL);
-                $preferences->put('monitor', !empty($_POST['dmpublished_monitor']), dcWorkspace::WS_BOOL);
-                $preferences->put('interval', (int) $_POST['dmpublished_interval'], dcWorkspace::WS_INT);
+                $preferences->put('active', !empty($_POST['dmpublished_active']), App::userWorkspace()::WS_BOOL);
+                $preferences->put('posts_nb', (int) $_POST['dmpublished_posts_nb'], App::userWorkspace()::WS_INT);
+                $preferences->put('posts_large', empty($_POST['dmpublished_posts_small']), App::userWorkspace()::WS_BOOL);
+                $preferences->put('monitor', !empty($_POST['dmpublished_monitor']), App::userWorkspace()::WS_BOOL);
+                $preferences->put('interval', (int) $_POST['dmpublished_interval'], App::userWorkspace()::WS_INT);
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
             }
         }
 
