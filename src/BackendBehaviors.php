@@ -24,7 +24,6 @@ use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Legend;
 use Dotclear\Helper\Html\Form\Number;
 use Dotclear\Helper\Html\Form\Para;
-use Dotclear\Interface\Core\BlogInterface;
 use Exception;
 
 class BackendBehaviors
@@ -32,7 +31,7 @@ class BackendBehaviors
     public static function getPublishedPosts(int $nb, bool $large): string
     {
         // Get last $nb recently published posts
-        $params = ['post_status' => BlogInterface::POST_PUBLISHED];
+        $params = ['post_status' => App::blog()::POST_PUBLISHED];
         if ((int) $nb > 0) {
             $params['limit'] = (int) $nb;
         }
@@ -53,7 +52,7 @@ class BackendBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => BlogInterface::POST_PUBLISHED]) . '">' . __('See all published posts') . '</a></p>';
+            $ret .= '<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => App::blog()::POST_PUBLISHED]) . '">' . __('See all published posts') . '</a></p>';
 
             return $ret;
         }
