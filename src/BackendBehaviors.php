@@ -35,6 +35,7 @@ class BackendBehaviors
         if ((int) $nb > 0) {
             $params['limit'] = (int) $nb;
         }
+
         $rs = App::blog()->getPosts($params, false);
         if (!$rs->isEmpty()) {
             $ret = '<ul>';
@@ -49,12 +50,13 @@ class BackendBehaviors
                         Date::dt2str(App::blog()->settings()->system->time_format, $rs->post_dt)) .
                     ')';
                 }
+
                 $ret .= '</li>';
             }
-            $ret .= '</ul>';
-            $ret .= '<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => App::blog()::POST_PUBLISHED]) . '">' . __('See all published posts') . '</a></p>';
 
-            return $ret;
+            $ret .= '</ul>';
+
+            return $ret . ('<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => App::blog()::POST_PUBLISHED]) . '">' . __('See all published posts') . '</a></p>');
         }
 
         return '<p>' . ((int) $nb > 0 ? __('No recently published post') : __('No published post')) . '</p>';
