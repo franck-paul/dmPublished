@@ -25,6 +25,6 @@ $this->registerModule(
 
         'details'    => 'https://open-time.net/?q=dmPublished',
         'support'    => 'https://github.com/franck-paul/dmPublished',
-        'repository' => 'https://raw.githubusercontent.com/franck-paul/dmPublished/master/dcstore.xml',
+        'repository' => 'https://raw.githubusercontent.com/franck-paul/dmPublished/main/dcstore.xml',
     ]
 );

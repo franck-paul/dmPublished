@@ -105,7 +105,7 @@ dotclear.dmPublishedPostsView = (line, action = 'toggle', e = null) => {
     return;
   }
 
-  const postId = $(line).attr('id').substr(4);
+  const postId = $(line).attr('id').substring(4);
   const lineId = `dmrpe${postId}`;
   let li = document.getElementById(lineId);
 
