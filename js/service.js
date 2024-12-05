@@ -14,7 +14,7 @@ dotclear.dmPublishedPostsCount = () => {
             dotclear.badge($('#published-posts'), {
               id: 'dmrp',
               value: nb,
-              remove: nb !== undefined && nb === 0,
+              remove: nb <= 0,
               type: 'soft',
             });
           }
@@ -101,7 +101,7 @@ dotclear.dmPublishedCheck = () => {
 };
 
 dotclear.dmPublishedPostsView = (line, action = 'toggle', e = null) => {
-  if ($(line).attr('id') == undefined) {
+  if ($(line).attr('id') === undefined) {
     return;
   }
 
@@ -136,7 +136,7 @@ dotclear.dmPublishedPostsView = (line, action = 'toggle', e = null) => {
   }
 };
 
-$(() => {
+dotclear.ready(() => {
   Object.assign(dotclear, dotclear.getData('dm_published'));
   $.expandContent({
     lines: $('#published-posts li.line'),

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief dmPublished, a plugin for Dotclear 2
  *
@@ -27,7 +28,7 @@ class BackendRest
     {
         return [
             'ret' => true,
-            'nb'  => App::blog()->getPosts(['post_status' => App::blog()::POST_PUBLISHED], true)->f(0),
+            'nb'  => (int) App::blog()->getPosts(['post_status' => App::blog()::POST_PUBLISHED], true)->f(0),
         ];
     }
 
@@ -51,11 +52,6 @@ class BackendRest
     public static function getLastPublishedRows(): array
     {
         $preferences = My::prefs();
-        if (!$preferences) {
-            return [
-                'ret' => false,
-            ];
-        }
 
         $list = BackendBehaviors::getPublishedPosts(
             $preferences->posts_nb,
