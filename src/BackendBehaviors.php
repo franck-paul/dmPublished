@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief dmPublished, a plugin for Dotclear 2
  *
@@ -68,7 +69,7 @@ class BackendBehaviors
 
         return
         Page::jsJson('dm_published', [
-            'dmPublished_Monitor'  => $preferences?->monitor,
+            'dmPublished_Monitor'  => $preferences->monitor,
             'dmPublished_Interval' => ($preferences->interval ?? 300),
         ]) .
         My::jsLoad('service.js');
@@ -83,7 +84,7 @@ class BackendBehaviors
     {
         $preferences = My::prefs();
         // Add large modules to the contents stack
-        if ($preferences?->active) {
+        if ($preferences->active) {
             $class = ($preferences->posts_large ? 'medium' : 'small');
             $ret   = '<div id="published-posts" class="box ' . $class . '">' .
             '<h3>' . '<img src="' . urldecode(Page::getPF(My::id() . '/icon.svg')) . '" alt="" class="icon-small">' . ' ' . __('Recently Published posts') . '</h3>';
@@ -103,17 +104,15 @@ class BackendBehaviors
         $preferences = My::prefs();
 
         // Get and store user's prefs for plugin options
-        if ($preferences) {
-            try {
-                // Recently published posts
-                $preferences->put('active', !empty($_POST['dmpublished_active']), App::userWorkspace()::WS_BOOL);
-                $preferences->put('posts_nb', (int) $_POST['dmpublished_posts_nb'], App::userWorkspace()::WS_INT);
-                $preferences->put('posts_large', empty($_POST['dmpublished_posts_small']), App::userWorkspace()::WS_BOOL);
-                $preferences->put('monitor', !empty($_POST['dmpublished_monitor']), App::userWorkspace()::WS_BOOL);
-                $preferences->put('interval', (int) $_POST['dmpublished_interval'], App::userWorkspace()::WS_INT);
-            } catch (Exception $e) {
-                App::error()->add($e->getMessage());
-            }
+        try {
+            // Recently published posts
+            $preferences->put('active', !empty($_POST['dmpublished_active']), App::userWorkspace()::WS_BOOL);
+            $preferences->put('posts_nb', (int) $_POST['dmpublished_posts_nb'], App::userWorkspace()::WS_INT);
+            $preferences->put('posts_large', empty($_POST['dmpublished_posts_small']), App::userWorkspace()::WS_BOOL);
+            $preferences->put('monitor', !empty($_POST['dmpublished_monitor']), App::userWorkspace()::WS_BOOL);
+            $preferences->put('interval', (int) $_POST['dmpublished_interval'], App::userWorkspace()::WS_INT);
+        } catch (Exception $e) {
+            App::error()->add($e->getMessage());
         }
 
         return '';
@@ -129,26 +128,26 @@ class BackendBehaviors
         ->legend((new Legend(__('Recently published posts on dashboard'))))
         ->fields([
             (new Para())->items([
-                (new Checkbox('dmpublished_active', $preferences?->active))
+                (new Checkbox('dmpublished_active', $preferences->active))
                     ->value(1)
                     ->label((new Label(__('Display recently published posts'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Number('dmpublished_posts_nb', 1, 999, $preferences?->posts_nb))
+                (new Number('dmpublished_posts_nb', 1, 999, $preferences->posts_nb))
                     ->label((new Label(__('Number of published posts to display:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpublished_posts_small', !$preferences?->posts_large))
+                (new Checkbox('dmpublished_posts_small', !$preferences->posts_large))
                     ->value(1)
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpublished_monitor', $preferences?->monitor))
+                (new Checkbox('dmpublished_monitor', $preferences->monitor))
                     ->value(1)
                     ->label((new Label(__('Monitor published'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Number('dmpublished_interval', 0, 9_999_999, $preferences?->interval))
+                (new Number('dmpublished_interval', 0, 9_999_999, $preferences->interval))
                     ->label((new Label(__('Interval in seconds between two refreshes:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
         ])
