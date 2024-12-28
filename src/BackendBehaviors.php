@@ -33,8 +33,8 @@ class BackendBehaviors
     {
         // Get last $nb recently published posts
         $params = ['post_status' => App::blog()::POST_PUBLISHED];
-        if ((int) $nb > 0) {
-            $params['limit'] = (int) $nb;
+        if ($nb > 0) {
+            $params['limit'] = $nb;
         }
 
         $rs = App::blog()->getPosts($params, false);
@@ -60,7 +60,7 @@ class BackendBehaviors
             return $ret . ('<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => App::blog()::POST_PUBLISHED]) . '">' . __('See all published posts') . '</a></p>');
         }
 
-        return '<p>' . ((int) $nb > 0 ? __('No recently published post') : __('No published post')) . '</p>';
+        return '<p>' . ($nb > 0 ? __('No recently published post') : __('No published post')) . '</p>';
     }
 
     public static function adminDashboardHeaders(): string
@@ -77,8 +77,6 @@ class BackendBehaviors
 
     /**
      * @param      ArrayObject<int, ArrayObject<int, non-falsy-string>>  $contents  The contents
-     *
-     * @return     string
      */
     public static function adminDashboardContents(ArrayObject $contents): string
     {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief dmPublished, a plugin for Dotclear 2
  *
@@ -22,7 +23,8 @@ class Backend extends Process
     public static function init(): bool
     {
         // dead but useful code, in order to have translations
-        __('Recently Published Posts Dashboard Module') . __('Display recently published posts on dashboard');
+        __('Recently Published Posts Dashboard Module');
+        __('Display recently published posts on dashboard');
 
         return self::status(My::checkContext(My::BACKEND));
     }
