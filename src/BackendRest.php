@@ -28,7 +28,7 @@ class BackendRest
     {
         return [
             'ret' => true,
-            'nb'  => (int) App::blog()->getPosts(['post_status' => App::blog()::POST_PUBLISHED], true)->f(0),
+            'nb'  => (int) App::blog()->getPosts(['post_status' => App::status()->post()::PUBLISHED], true)->f(0),
         ];
     }
 

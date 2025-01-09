@@ -32,7 +32,7 @@ class BackendBehaviors
     public static function getPublishedPosts(int $nb, bool $large): string
     {
         // Get last $nb recently published posts
-        $params = ['post_status' => App::blog()::POST_PUBLISHED];
+        $params = ['post_status' => App::status()->post()::PUBLISHED];
         if ($nb > 0) {
             $params['limit'] = $nb;
         }
@@ -57,7 +57,7 @@ class BackendBehaviors
 
             $ret .= '</ul>';
 
-            return $ret . ('<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => App::blog()::POST_PUBLISHED]) . '">' . __('See all published posts') . '</a></p>');
+            return $ret . ('<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => App::status()->post()::PUBLISHED]) . '">' . __('See all published posts') . '</a></p>');
         }
 
         return '<p>' . ($nb > 0 ? __('No recently published post') : __('No published post')) . '</p>';
