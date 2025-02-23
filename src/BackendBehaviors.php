@@ -18,13 +18,22 @@ namespace Dotclear\Plugin\dmPublished;
 use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Page;
+use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Form\Checkbox;
+use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Fieldset;
+use Dotclear\Helper\Html\Form\Img;
 use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Legend;
+use Dotclear\Helper\Html\Form\Li;
+use Dotclear\Helper\Html\Form\Link;
+use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Html\Form\Number;
 use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Set;
+use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Helper\Html\Form\Ul;
 use Exception;
 
 class BackendBehaviors
@@ -38,29 +47,50 @@ class BackendBehaviors
         }
 
         $rs = App::blog()->getPosts($params, false);
+
         if (!$rs->isEmpty()) {
-            $ret = '<ul>';
-            while ($rs->fetch()) {
-                $ret .= '<li class="line" id="dmrp' . $rs->post_id . '">';
-                $ret .= '<a href="' . App::backend()->url()->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
-                if ($large) {
-                    $dt = '<time datetime="' . Date::iso8601((int) strtotime($rs->post_dt), App::auth()->getInfo('user_tz')) . '">%s</time>';
-                    $ret .= ' (' .
-                    __('by') . ' ' . $rs->user_id . ' ' . sprintf($dt, __('on') . ' ' .
-                        Date::dt2str(App::blog()->settings()->system->date_format, $rs->post_dt) . ' ' .
-                        Date::dt2str(App::blog()->settings()->system->time_format, $rs->post_dt)) .
-                    ')';
+            $lines = function (MetaRecord $rs, bool $large) {
+                while ($rs->fetch()) {
+                    $infos = [];
+                    if ($large) {
+                        $details = __('on') . ' ' .
+                            Date::dt2str(App::blog()->settings()->system->date_format, $rs->post_dt) . ' ' .
+                            Date::dt2str(App::blog()->settings()->system->time_format, $rs->post_dt);
+                        $infos[] = (new Text(null, __('by') . ' ' . $rs->user_id));
+                        $infos[] = (new Text('time', $details))
+                            ->extra('datetime="' . Date::iso8601((int) strtotime($rs->post_dt)) . '"');
+                    }
+                    yield (new Li('dmrp' . $rs->post_id))
+                        ->class('line')
+                        ->separator(' ')
+                        ->items([
+                            (new Link())
+                                ->href(App::backend()->url()->get('admin.post', ['id' => $rs->post_id]))
+                                ->text($rs->post_title),
+                            ... $infos,
+                        ]);
                 }
+            };
 
-                $ret .= '</li>';
-            }
-
-            $ret .= '</ul>';
-
-            return $ret . ('<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => App::status()->post()::PUBLISHED]) . '">' . __('See all published posts') . '</a></p>');
+            return (new Set())
+                ->items([
+                    (new Ul())
+                        ->items([
+                            ... $lines($rs, $large),
+                        ]),
+                    (new Para())
+                        ->items([
+                            (new Link())
+                                ->href(App::backend()->url()->get('admin.posts', ['status' => App::status()->post()::PUBLISHED]))
+                                ->text(__('See all published posts')),
+                        ]),
+                ])
+            ->render();
         }
 
-        return '<p>' . ($nb > 0 ? __('No recently published post') : __('No published post')) . '</p>';
+        return (new Note())
+            ->text($nb > 0 ? __('No recently published post') : __('No published post'))
+        ->render();
     }
 
     public static function adminDashboardHeaders(): string
@@ -76,7 +106,7 @@ class BackendBehaviors
     }
 
     /**
-     * @param      ArrayObject<int, ArrayObject<int, non-falsy-string>>  $contents  The contents
+     * @param      ArrayObject<int, ArrayObject<int, string>>  $contents  The contents
      */
     public static function adminDashboardContents(ArrayObject $contents): string
     {
@@ -84,13 +114,23 @@ class BackendBehaviors
         // Add large modules to the contents stack
         if ($preferences->active) {
             $class = ($preferences->posts_large ? 'medium' : 'small');
-            $ret   = '<div id="published-posts" class="box ' . $class . '">' .
-            '<h3>' . '<img src="' . urldecode(Page::getPF(My::id() . '/icon.svg')) . '" alt="" class="icon-small">' . ' ' . __('Recently Published posts') . '</h3>';
-            $ret .= self::getPublishedPosts(
-                $preferences->posts_nb,
-                $preferences->posts_large
-            );
-            $ret .= '</div>';
+
+            $ret = (new Div('published-posts'))
+                ->class(['box', $class])
+                ->items([
+                    (new Text(
+                        'h3',
+                        (new Img(urldecode(Page::getPF(My::id() . '/icon.svg'))))
+                            ->class('icon-small')
+                        ->render() . ' ' . __('Recently Published posts')
+                    )),
+                    (new Text(null, self::getPublishedPosts(
+                        $preferences->posts_nb,
+                        $preferences->posts_large
+                    ))),
+                ])
+            ->render();
+
             $contents->append(new ArrayObject([$ret]));
         }
 
