@@ -58,7 +58,7 @@ class BackendBehaviors
                             Date::dt2str(App::blog()->settings()->system->time_format, $rs->post_dt);
                         $infos[] = (new Text(null, __('by') . ' ' . $rs->user_id));
                         $infos[] = (new Text('time', $details))
-                            ->extra('datetime="' . Date::iso8601((int) strtotime($rs->post_dt)) . '"');
+                            ->extra('datetime="' . Date::iso8601((int) strtotime($rs->post_dt), App::auth()->getInfo('user_tz')) . '"');
                     }
                     yield (new Li('dmrp' . $rs->post_id))
                         ->class('line')
