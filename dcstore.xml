@@ -1,11 +1,11 @@
 <modules xmlns:da="http://dotaddict.org/da/">
   <module id="dmPublished">
     <name>Recently Published Posts Dashboard Module</name>
-    <version>5.2</version>
+    <version>5.3</version>
     <author>Franck Paul</author>
     <desc>Display recently published posts on dashboard</desc>
-    <date>2025-02-24T12:15:48+0100</date>
-    <file>https://github.com/franck-paul/dmPublished/releases/download/5.2/plugin-dmPublished-5.2.zip</file>
+    <date>2025-02-24T12:23:49+0100</date>
+    <file>https://github.com/franck-paul/dmPublished/releases/download/5.3/plugin-dmPublished-5.3.zip</file>
     <da:dcmin>2.33</da:dcmin>
     <da:details>https://open-time.net/?q=dmPublished</da:details>
     <da:support>https://github.com/franck-paul/dmPublished</da:support>
