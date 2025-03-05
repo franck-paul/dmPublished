@@ -15,9 +15,9 @@ $this->registerModule(
     'Recently Published Posts Dashboard Module',
     'Display recently published posts on dashboard',
     'Franck Paul',
-    '5.3',
+    '5.4',
     [
-        'date'        => '2025-02-24T12:23:49+0100',
+        'date'        => '2025-03-06T00:23:26+0100',
         'requires'    => [['core', '2.33']],
         'permissions' => 'My',
         'type'        => 'plugin',
@@ -28,5 +28,6 @@ $this->registerModule(
         'details'    => 'https://open-time.net/?q=dmPublished',
         'support'    => 'https://github.com/franck-paul/dmPublished',
         'repository' => 'https://raw.githubusercontent.com/franck-paul/dmPublished/main/dcstore.xml',
+        'license'    => 'gpl2',
     ]
 );
