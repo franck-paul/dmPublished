@@ -15,9 +15,9 @@ $this->registerModule(
     'Recently Published Posts Dashboard Module',
     'Display recently published posts on dashboard',
     'Franck Paul',
-    '6.0',
+    '7.0',
     [
-        'date'     => '2025-05-04T10:20:24+0200',
+        'date'     => '2025-06-03T18:08:25+0200',
         'requires' => [
             ['core', '2.34'],
             ['dmHelper', '5.0'],
