@@ -100,8 +100,8 @@ class BackendBehaviors
 
         return
         Page::jsJson('dm_published', [
-            'dmPublished_Monitor'  => $preferences->monitor,
-            'dmPublished_Interval' => ($preferences->interval ?? 300),
+            'monitor'  => $preferences->monitor,
+            'interval' => ($preferences->interval ?? 300),
         ]) .
         My::jsLoad('service.js');
     }
