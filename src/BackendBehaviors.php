@@ -50,23 +50,32 @@ class BackendBehaviors
 
         if (!$rs->isEmpty()) {
             $lines = function (MetaRecord $rs, bool $large) {
+                $date_format = is_string($date_format = App::blog()->settings()->system->date_format) ? $date_format : '%F';
+                $time_format = is_string($time_format = App::blog()->settings()->system->time_format) ? $time_format : '%T';
+                $user_tz     = is_string($user_tz = App::auth()->getInfo('user_tz')) ? $user_tz : 'UTC';
+
                 while ($rs->fetch()) {
+                    $post_id    = is_numeric($post_id = $rs->post_id) ? (int) $post_id : 0;
+                    $post_dt    = is_string($post_dt = $rs->post_dt) ? $post_dt : '';
+                    $user_id    = is_string($user_id = $rs->user_id) ? $user_id : '';
+                    $post_title = is_string($post_title = $rs->post_title) ? $post_title : '';
+
                     $infos = [];
                     if ($large) {
                         $details = __('on') . ' ' .
-                            Date::dt2str(App::blog()->settings()->system->date_format, $rs->post_dt) . ' ' .
-                            Date::dt2str(App::blog()->settings()->system->time_format, $rs->post_dt);
-                        $infos[] = (new Text(null, __('by') . ' ' . $rs->user_id));
+                            Date::dt2str($date_format, $post_dt) . ' ' .
+                            Date::dt2str($time_format, $post_dt);
+                        $infos[] = (new Text(null, __('by') . ' ' . $user_id));
                         $infos[] = (new Timestamp($details))
-                            ->datetime(Date::iso8601((int) strtotime($rs->post_dt), App::auth()->getInfo('user_tz')));
+                            ->datetime(Date::iso8601((int) strtotime($post_dt), $user_tz));
                     }
-                    yield (new Li('dmrp' . $rs->post_id))
+                    yield (new Li('dmrp' . $post_id))
                         ->class('line')
                         ->separator(' ')
                         ->items([
                             (new Link())
-                                ->href(App::backend()->url()->get('admin.post', ['id' => $rs->post_id]))
-                                ->text($rs->post_title),
+                                ->href(App::backend()->url()->get('admin.post', ['id' => $post_id]))
+                                ->text($post_title),
                             ... $infos,
                         ]);
                 }
@@ -111,6 +120,9 @@ class BackendBehaviors
     public static function adminDashboardContents(ArrayObject $contents): string
     {
         $preferences = My::prefs();
+
+        $posts_nb = is_numeric($posts_nb = $preferences->posts_nb) ? (int) $posts_nb : 0;
+
         // Add large modules to the contents stack
         if ($preferences->active) {
             $class = ($preferences->posts_large ? 'medium' : 'small');
@@ -126,8 +138,8 @@ class BackendBehaviors
                         ->render() . ' ' . __('Recently Published posts')
                     )),
                     (new Text(null, self::getPublishedPosts(
-                        $preferences->posts_nb,
-                        $preferences->posts_large
+                        $posts_nb,
+                        (bool) $preferences->posts_large
                     ))),
                 ])
             ->render();
@@ -140,16 +152,20 @@ class BackendBehaviors
 
     public static function adminAfterDashboardOptionsUpdate(): string
     {
-        $preferences = My::prefs();
-
         // Get and store user's prefs for plugin options
         try {
+            // Post data helpers
+            $_Bool = fn (string $name): bool => !empty($_POST[$name]);
+            $_Int  = fn (string $name, int $default = 0): int => isset($_POST[$name]) && is_numeric($val = $_POST[$name]) ? (int) $val : $default;
+
+            $preferences = My::prefs();
+
             // Recently published posts
-            $preferences->put('active', !empty($_POST['dmpublished_active']), App::userWorkspace()::WS_BOOL);
-            $preferences->put('posts_nb', (int) $_POST['dmpublished_posts_nb'], App::userWorkspace()::WS_INT);
-            $preferences->put('posts_large', empty($_POST['dmpublished_posts_small']), App::userWorkspace()::WS_BOOL);
-            $preferences->put('monitor', !empty($_POST['dmpublished_monitor']), App::userWorkspace()::WS_BOOL);
-            $preferences->put('interval', (int) $_POST['dmpublished_interval'], App::userWorkspace()::WS_INT);
+            $preferences->put('active', $_Bool('dmpublished_active'), App::userWorkspace()::WS_BOOL);
+            $preferences->put('posts_nb', $_Int('dmpublished_posts_nb', 5), App::userWorkspace()::WS_INT);
+            $preferences->put('posts_large', !$_Bool('dmpublished_posts_small'), App::userWorkspace()::WS_BOOL);
+            $preferences->put('monitor', $_Bool('dmpublished_monitor'), App::userWorkspace()::WS_BOOL);
+            $preferences->put('interval', $_Int('dmpublished_interval'), App::userWorkspace()::WS_INT);
         } catch (Exception $e) {
             App::error()->add($e->getMessage());
         }
@@ -159,6 +175,10 @@ class BackendBehaviors
 
     public static function adminDashboardOptionsForm(): string
     {
+        // Variable data helpers
+        $_Bool = fn (mixed $var): bool => (bool) $var;
+        $_Int  = fn (mixed $var, int $default = 0): int => $var !== null && is_numeric($val = $var) ? (int) $val : $default;
+
         $preferences = My::prefs();
 
         // Add fieldset for plugin options
@@ -167,26 +187,26 @@ class BackendBehaviors
         ->legend((new Legend(__('Recently published posts on dashboard'))))
         ->fields([
             (new Para())->items([
-                (new Checkbox('dmpublished_active', $preferences->active))
+                (new Checkbox('dmpublished_active', $_Bool($preferences->active)))
                     ->value(1)
                     ->label((new Label(__('Display recently published posts'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Number('dmpublished_posts_nb', 1, 999, $preferences->posts_nb))
+                (new Number('dmpublished_posts_nb', 1, 999, $_Int($preferences->posts_nb, 5)))
                     ->label((new Label(__('Number of published posts to display:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpublished_posts_small', !$preferences->posts_large))
+                (new Checkbox('dmpublished_posts_small', !$_Bool($preferences->posts_large)))
                     ->value(1)
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpublished_monitor', $preferences->monitor))
+                (new Checkbox('dmpublished_monitor', $_Bool($preferences->monitor)))
                     ->value(1)
                     ->label((new Label(__('Monitor published'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Number('dmpublished_interval', 0, 9_999_999, $preferences->interval))
+                (new Number('dmpublished_interval', 0, 9_999_999, $_Int($preferences->interval)))
                     ->label((new Label(__('Interval in seconds between two refreshes:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
         ])

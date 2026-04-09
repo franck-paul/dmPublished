@@ -26,9 +26,11 @@ class BackendRest
      */
     public static function getPublishedPostsCount(): array
     {
+        $count = is_numeric($count = App::blog()->getPosts(['post_status' => App::status()->post()::PUBLISHED], true)->f(0)) ? (int) $count : 0;
+
         return [
             'ret' => true,
-            'nb'  => (int) App::blog()->getPosts(['post_status' => App::status()->post()::PUBLISHED], true)->f(0),
+            'nb'  => $count,
         ];
     }
 
@@ -53,9 +55,11 @@ class BackendRest
     {
         $preferences = My::prefs();
 
+        $posts_nb = is_numeric($posts_nb = $preferences->posts_nb) ? (int) $posts_nb : 0;
+
         $list = BackendBehaviors::getPublishedPosts(
-            $preferences->posts_nb,
-            $preferences->posts_large
+            $posts_nb,
+            (bool) $preferences->posts_large
         );
 
         return [
