@@ -55,11 +55,11 @@ class BackendRest
     {
         $preferences = My::prefs();
 
-        $posts_nb = is_numeric($posts_nb = $preferences->posts_nb) ? (int) $posts_nb : 0;
+        $posts_nb = $preferences->getInt('posts_nb', false);
 
         $list = BackendBehaviors::getPublishedPosts(
             $posts_nb,
-            (bool) $preferences->posts_large
+            $preferences->getBool('posts_large', false)
         );
 
         return [
