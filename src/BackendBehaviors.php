@@ -189,7 +189,7 @@ class BackendBehaviors
                     ->label((new Label(__('Display recently published posts'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Number('dmpublished_posts_nb', 1, 999, $preferences->getInt('posts_nb, 5', false)))
+                (new Number('dmpublished_posts_nb', 1, 999, $preferences->getInt('posts_nb', false) ?: 5))
                     ->label((new Label(__('Number of published posts to display:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
             (new Para())->items([
