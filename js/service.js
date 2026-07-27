@@ -2,6 +2,13 @@
 'use strict';
 
 dotclear.ready(() => {
+  /**
+   * Check connection
+   *
+   * @return     {?boolean}  true/false depending on connection, null if cannot be tested
+   */
+  dotclear.dmOnline = () => ('onLine' in navigator ? navigator.onLine : null);
+
   dotclear.dmPublished = dotclear.getData('dm_published');
 
   const viewPost = (line, _action = 'toggle', event = null) => {
@@ -9,6 +16,8 @@ dotclear.ready(() => {
   };
 
   const getCount = () => {
+    if (dotclear.dmOnline() === false) return;
+
     dotclear.services(
       'dmPublishedPostsCount',
       (data) => {
@@ -42,6 +51,8 @@ dotclear.ready(() => {
   };
 
   const getRows = () => {
+    if (dotclear.dmOnline() === false) return;
+
     dotclear.services(
       'dmPublisheduledRows',
       (data) => {
@@ -80,6 +91,8 @@ dotclear.ready(() => {
   };
 
   const check = () => {
+    if (dotclear.dmOnline() === false) return;
+
     dotclear.services(
       'dmPublishedCheck',
       (data) => {
