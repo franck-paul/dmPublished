@@ -112,7 +112,7 @@ class BackendBehaviors
             'monitor'  => $preferences->getBool('monitor'),
             'interval' => $preferences->getInt('interval', false) ?: 300,
         ]) .
-        My::jsLoad('service.js');
+        My::jsLoad('service.js', defer: true);
     }
 
     /**
