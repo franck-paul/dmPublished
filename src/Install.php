@@ -46,9 +46,9 @@ class Install
                 }
 
                 // Change settings names (remove published_ prefix in them)
-                $rename = static function (string $name, UserWorkspaceInterface $preferences): void {
-                    if ($preferences->prefExists('published_' . $name, true)) {
-                        $preferences->rename('published_' . $name, $name);
+                $rename = static function (string $name, UserWorkspaceInterface $userWorkspace): void {
+                    if ($userWorkspace->prefExists('published_' . $name, true)) {
+                        $userWorkspace->rename('published_' . $name, $name);
                     }
                 };
 

@@ -49,16 +49,16 @@ class BackendBehaviors
         $rs = App::blog()->getPosts($params, false);
 
         if (!$rs->isEmpty()) {
-            $lines = function (MetaRecord $rs, bool $large) {
+            $lines = function (MetaRecord $metaRecord, bool $large) {
                 $date_format = App::blog()->settings()->get('system')->getStr('date_format', false) ?: '%F';
                 $time_format = App::blog()->settings()->get('system')->getStr('time_format', false) ?: '%T';
                 $user_tz     = is_string($user_tz = App::auth()->getInfo('user_tz')) ? $user_tz : 'UTC';
 
-                while ($rs->fetch()) {
-                    $post_id    = $rs->intField('post_id');
-                    $post_dt    = $rs->strField('post_dt');
-                    $user_id    = $rs->strField('user_id');
-                    $post_title = $rs->strField('post_title');
+                while ($metaRecord->fetch()) {
+                    $post_id    = $metaRecord->intField('post_id');
+                    $post_dt    = $metaRecord->strField('post_dt');
+                    $user_id    = $metaRecord->strField('user_id');
+                    $post_title = $metaRecord->strField('post_title');
 
                     $infos = [];
                     if ($large) {
@@ -116,9 +116,9 @@ class BackendBehaviors
     }
 
     /**
-     * @param      ArrayObject<int, ArrayObject<int, string>>  $contents  The contents
+     * @param      ArrayObject<int, ArrayObject<int, string>>  $arrayObject  The contents
      */
-    public static function adminDashboardContents(ArrayObject $contents): string
+    public static function adminDashboardContents(ArrayObject $arrayObject): string
     {
         $preferences = My::prefs();
 
@@ -145,7 +145,7 @@ class BackendBehaviors
                 ])
             ->render();
 
-            $contents->append(new ArrayObject([$ret]));
+            $arrayObject->append(new ArrayObject([$ret]));
         }
 
         return '';
