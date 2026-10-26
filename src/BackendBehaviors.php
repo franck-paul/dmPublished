@@ -133,7 +133,7 @@ class BackendBehaviors
                 ->items([
                     (new Text(
                         'h3',
-                        (new Img(urldecode((string) App::backend()->page()->getPF(My::id() . '/icon.svg'))))
+                        (new Img(urldecode(App::backend()->page()->getPF(My::id() . '/icon.svg'))))
                             ->alt('')
                             ->class('icon-small')
                         ->render() . ' ' . __('Recently Published posts')
