@@ -125,8 +125,8 @@ class BackendBehaviors
         $posts_nb = $preferences->getInt('posts_nb', false);
 
         // Add large modules to the contents stack
-        if ($preferences->getBool('active')) {
-            $class = ($preferences->getBool('posts_large') ? 'medium' : 'small');
+        if ($preferences->getBool('active', false)) {
+            $class = ($preferences->getBool('posts_large', false) ? 'medium' : 'small');
 
             $ret = (new Div('published-posts'))
                 ->class(['box', $class])
