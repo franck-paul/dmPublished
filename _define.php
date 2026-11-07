@@ -18,9 +18,9 @@ if (isset($this) && is_object($this) && method_exists($this, 'registerModule') &
         'Recently Published Posts Dashboard Module',
         'Display recently published posts on dashboard',
         'Franck Paul',
-        '10.0',
+        '10.1',
         [
-            'date'     => '2026-08-03T09:53:44+0200',
+            'date'     => '2026-11-07T16:47:08+0100',
             'requires' => [
                 ['core', '2.39'],
                 ['dmHelper', '5.0'],
